@@ -71,10 +71,8 @@ const char *data_dir( void )
 FILE *dir_fopen( const char *dir, const char *file, const char *mode )
 {
 	char *path = malloc(strlen(dir) + 1 + strlen(file) + 1);
-	sprintf(path, "%s/%s", dir, file);
-
+	sprintf(path, "%s\\%s", dir, file);
 	FILE *f = fopen(path, mode);
-
 	free(path);
 
 	return f;

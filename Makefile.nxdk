@@ -1,0 +1,27 @@
+XBE_TITLE = OpenTyrian
+GEN_XISO = $(XBE_TITLE).iso
+
+NXDK_SDL = y
+
+NXDK_STACKSIZE=131072
+
+SRCS +=	$(wildcard $(CURDIR)/src/*.c)
+
+CFLAGS += -I$(CURDIR)/src -I$(CURDIR)/xbox -O2 -D_WIN32 -DTARGET_WIN32
+CFLAGS += -DTYRIAN_DIR='"D:\\data"'
+CFLAGS += -DOPENTYRIAN_VERSION='"NXDK "'
+
+CFLAGS += -DHG_REV='"github.com/Ryzee119/opentyrian"'
+
+new_all: copy_resources all
+
+include $(NXDK_DIR)/Makefile
+
+copy_resources:
+	@mkdir -p $(OUTPUT_DIR)
+	@mkdir -p $(OUTPUT_DIR)/data
+	@mkdir -p $(OUTPUT_DIR)/doc
+	@mkdir -p $(OUTPUT_DIR)/xbox
+	@cp -r $(CURDIR)/doc/* $(OUTPUT_DIR)/doc/
+	@cp -r $(CURDIR)/COPYING $(OUTPUT_DIR)/COPYING.txt
+	@cp -r $(CURDIR)/CREDITS $(OUTPUT_DIR)/CREDITS.txt

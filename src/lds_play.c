@@ -208,7 +208,7 @@ void lds_rewind( void )
 	memset(fmchip, 0, sizeof(fmchip));
 
 	/* OPL2 init */
-	opl_init();				/* Reset OPL chip */
+	opl_init(48000);			/* Reset OPL chip */
 	opl_write(1, 0x20);
 	opl_write(8, 0);
 	opl_write(0xbd, regbd);

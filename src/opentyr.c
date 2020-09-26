@@ -55,6 +55,17 @@
 #include <string.h>
 #include <time.h>
 
+#ifdef NXDK
+#include <assert.h>
+#include <windows.h>
+#include <SDL.h>
+#include <nxdk/mount.h>
+#include <hal/xbox.h>
+#include <hal/video.h>
+#include <hal/debug.h>
+#define printf(fmt, ...) debugPrint(fmt, __VA_ARGS__)
+#endif
+
 const char *opentyrian_str = "OpenTyrian";
 const char *opentyrian_version = OPENTYRIAN_VERSION;
 
@@ -82,6 +93,17 @@ void opentyrian_menu( void )
 		"Jukebox",
 		"Return to Main Menu",
 	};
+	#ifdef NXDK
+	bool menu_items_disabled[] =
+	{
+		false,
+		true,
+		true,
+		false,
+		false,
+		false,
+	};
+	#else
 	bool menu_items_disabled[] =
 	{
 		false,
@@ -92,6 +114,7 @@ void opentyrian_menu( void )
 		false,
 		false,
 	};
+	#endif
 	
 	assert(COUNTOF(menu_items) == MenuOptions_MAX);
 	assert(COUNTOF(menu_items_disabled) == MenuOptions_MAX);
@@ -318,6 +341,22 @@ void opentyrian_menu( void )
 
 int main( int argc, char *argv[] )
 {
+	#ifdef NXDK
+	XVideoSetMode(640, 480, 16, REFRESH_DEFAULT);
+	argc = 1;
+	argv = malloc(sizeof(char *) * argc);
+	for (int i = 0; i < argc; i++)
+		argv[i] = malloc(32);
+
+	strcpy(argv[0],"D:\\default.xbe");
+
+	BOOL mounted = nxMountDrive('E', "\\Device\\Harddisk0\\Partition1\\");
+	assert(mounted);
+	CreateDirectoryA("E:\\UDATA", NULL);
+	CreateDirectoryA("E:\\UDATA\\OpenTyrian", NULL);
+	CreateDirectoryA("E:\\UDATA\\OpenTyrian\\UserData", NULL);
+	SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
+	#endif
 	mt_srand(time(NULL));
 
 	printf("\nWelcome to... >> %s %s <<\n\n", opentyrian_str, opentyrian_version);
@@ -336,7 +375,9 @@ int main( int argc, char *argv[] )
 
 	JE_loadConfiguration();
 
+	#ifndef NXDK
 	xmas = xmas_time();  // arg handler may override
+	#endif
 
 	JE_paramCheck(argc, argv);
 

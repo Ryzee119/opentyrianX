@@ -47,7 +47,7 @@ Uint8 channel_vol[SFX_CHANNELS];
 int sound_init_state = false;
 int freq = 11025 * OUTPUT_QUALITY;
 
-static SDL_AudioCVT audio_cvt; // used for format conversion
+static SDL_AudioSpec ask, got;
 
 void audio_cb( void *userdata, unsigned char *feedme, int howmuch );
 
@@ -57,12 +57,10 @@ bool init_audio( void )
 {
 	if (audio_disabled)
 		return false;
-	
-	SDL_AudioSpec ask, got;
-	
+
 	ask.freq = freq;
 	ask.format = (BYTES_PER_SAMPLE == 2) ? AUDIO_S16SYS : AUDIO_S8;
-	ask.channels = 1;
+	ask.channels = 2;
 	ask.samples = 2048;
 	ask.callback = audio_cb;
 	
@@ -77,9 +75,8 @@ bool init_audio( void )
 	
 	printf("\tobtained  %d Hz, %d channels, %d samples\n", got.freq, got.channels, got.samples);
 	
-	SDL_BuildAudioCVT(&audio_cvt, ask.format, ask.channels, ask.freq, got.format, got.channels, got.freq);
 	
-	opl_init();
+	opl_init(got.freq);
 	
 	SDL_PauseAudio(0); // unpause
 	
@@ -89,11 +86,6 @@ bool init_audio( void )
 void audio_cb( void *user_data, unsigned char *sdl_buffer, int howmuch )
 {
 	(void)user_data;
-	
-	// prepare for conversion
-	howmuch /= audio_cvt.len_mult;
-	audio_cvt.buf = sdl_buffer;
-	audio_cvt.len = howmuch;
 	
 	static long ct = 0;
 	
@@ -108,7 +100,7 @@ void audio_cb( void *user_data, unsigned char *sdl_buffer, int howmuch )
 		{
 			while (ct < 0)
 			{
-				ct += freq;
+				ct += got.freq * got.channels;
 				lds_update(); /* SYN: Do I need to use the return value for anything here? */
 			}
 			/* SYN: Okay, about the calculations below. I still don't 100% get what's going on, but...
@@ -175,9 +167,6 @@ void audio_cb( void *user_data, unsigned char *sdl_buffer, int howmuch )
 			}
 		}
 	}
-	
-	// do conversion
-	SDL_ConvertAudio(&audio_cvt);
 }
 
 void deinit_audio( void )

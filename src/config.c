@@ -36,7 +36,7 @@
 
 #ifdef _MSC_VER
 #include <direct.h>
-#define mkdir _mkdir
+//#define mkdir _mkdir
 #else
 #include <unistd.h>
 #endif
@@ -213,7 +213,7 @@ JE_byte    superArcadeMode;
 JE_byte    superArcadePowerUp;
 
 JE_real linkGunDirec;
-JE_byte inputDevice[2] = { 1, 2 }; // 0:any  1:keyboard  2:mouse  3+:joystick
+JE_byte inputDevice[2] = { 3, 4 }; // 0:any  1:keyboard  2:mouse  3+:joystick
 
 JE_byte secretHint;
 JE_byte background3over;
@@ -770,7 +770,7 @@ const char *get_user_directory( void )
 			}
 		}
 #else
-		strcpy(user_dir, ".");
+		strcpy(user_dir, "E:\\UDATA\\OpenTyrian\\UserData");
 #endif
 	}
 	

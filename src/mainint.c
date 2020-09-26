@@ -1526,6 +1526,7 @@ void JE_highScoreCheck( void )
 
 				JE_barShade(VGAScreen, 65, 55, 255, 155);
 
+#ifndef NXDK
 				do
 				{
 					service_SDL_events(true);
@@ -1638,7 +1639,10 @@ void JE_highScoreCheck( void )
 					}
 				}
 				while (!quit);
-
+#else //Bypass keyboard input
+				cancel = false;
+				strcpy(stemp, "Xbox Player");
+#endif
 				if (!cancel)
 				{
 					saveFiles[slot].highScore1 = temp_score;
@@ -2354,6 +2358,7 @@ void JE_operation( JE_byte slot )
 	}
 	else if (slot % 11 != 0)
 	{
+#ifndef NXDK
 		strcpy(stemp, "              ");
 		memcpy(stemp, saveFiles[slot-1].name, strlen(saveFiles[slot-1].name));
 		temp = strlen(stemp);
@@ -2465,6 +2470,10 @@ void JE_operation( JE_byte slot )
 				}
 			}
 		}
+#else //Bypass keyboard for xbox
+	sprintf(stemp, "Xbox Save %02u", slot);
+	JE_saveGame(slot, stemp);
+#endif
 	}
 
 	wait_noinput(false, true, false);

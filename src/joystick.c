@@ -353,7 +353,15 @@ void reset_joystick_assignments( int j )
 			}
 		}
 	}
-	
+	#ifdef NXDK //Force joystick assignment
+	joystick[j].assignment[4][0].num = 0; //A
+	joystick[j].assignment[5][0].num = 1; //B
+	joystick[j].assignment[6][0].num = 2; //X
+	joystick[j].assignment[7][0].num = 3; //Y
+	joystick[j].assignment[8][0].num = 7; //START
+	joystick[j].assignment[9][0].num = 6; //BACK
+	#endif
+
 	joystick[j].analog = false;
 	joystick[j].sensitivity = 5;
 	joystick[j].threshold = 5;

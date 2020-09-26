@@ -2667,12 +2667,14 @@ void JE_menuFunction( JE_byte select )
 			performSave = true;
 			quikSave = false;
 			break;
+		#ifndef NXDK //Disable these for xbox
 		case 6:
 			curMenu = MENU_JOYSTICK_CONFIG;
 			break;
 		case 7:
 			curMenu = MENU_KEYBOARD_CONFIG;
 			break;
+		#endif
 		case 8:
 			curMenu = MENU_FULL_GAME;
 			break;

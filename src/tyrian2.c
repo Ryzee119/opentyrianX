@@ -3552,8 +3552,8 @@ bool JE_titleScreen( JE_boolean animate )
 								
 								difficultyLevel++;
 								
-								inputDevice[0] = 1;
-								inputDevice[1] = 2;
+								inputDevice[0] = 3;
+								inputDevice[1] = 4;
 							}
 							else if (richMode)
 							{
