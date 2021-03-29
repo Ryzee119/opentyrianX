@@ -3,8 +3,6 @@ GEN_XISO = $(XBE_TITLE).iso
 
 NXDK_SDL = y
 
-NXDK_STACKSIZE=131072
-
 SRCS +=	$(wildcard $(CURDIR)/src/*.c)
 
 CFLAGS += -I$(CURDIR)/src -I$(CURDIR)/xbox -O2 -D_WIN32 -DTARGET_WIN32
@@ -12,6 +10,8 @@ CFLAGS += -DTYRIAN_DIR='"D:\\data"'
 CFLAGS += -DOPENTYRIAN_VERSION='"NXDK "'
 
 CFLAGS += -DHG_REV='"github.com/Ryzee119/opentyrian"'
+
+LDFLAGS += -stack:131072
 
 new_all: copy_resources all
 
